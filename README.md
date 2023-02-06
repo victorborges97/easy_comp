@@ -13,8 +13,10 @@ and the Flutter guide for
 
 ## Features
 
-1. Inclue BaseWidget
-2. Inclue BasefulWidget
+1. BaseWidget
+2. BasefulWidget
+3. BaseState
+4. ValidatorUtil
 
 ## Instalação
 
@@ -22,7 +24,7 @@ and the Flutter guide for
 
 ```yaml
 dependencies:
-    easy_comp: ^0.0.1
+    easy_comp: ^0.0.2
 ```
 
 2. Importe o pacote para usar no seu App Flutter
@@ -33,7 +35,7 @@ import 'package:easy_comp/easy_comp.dart';
 
 ## Usage
 
--   Usando componente StatelessWidget
+-   Usando componente BaseWidget em um StatelessWidget
 
 ```dart
 import 'package:flutter/material.dart';
@@ -53,7 +55,7 @@ class EasyCompTeste extends BaseWidget {
 }
 ```
 
--   Usando componente StatefulWidget
+-   Usando componente BasefulWidget em um StatefulWidget
 
 ```dart
 import 'package:flutter/material.dart';
@@ -73,6 +75,45 @@ class _EasyCompTesteState extends BasefulWidgetState<EasyCompTeste> {
         child: Text("Usando BaseWidgetFull"),
       ),
     );
+  }
+}
+```
+
+-   Usando componente BaseState em um StatefulWidget
+
+```dart
+import 'package:easy_comp/src/base_state.dart';
+import 'package:easy_comp/src/provider_basestate.dart';
+import 'package:flutter/material.dart';
+
+class TesteBaseState extends StatefulWidget {
+  const TesteBaseState({super.key});
+  @override
+  BaseState<TesteBaseState, ProviderBaseState> createState() => _TesteBaseStateState();
+}
+
+class _TesteBaseStateState extends BaseState<TesteBaseState, ProviderBaseState> {
+  // Contem a variavel provider para pegar os dados do ProviderBaseState;
+
+  @override
+  void onInit() {
+    // onInit é o InitState
+    super.onInit();
+    debugPrint(provider.titulo);
+
+    provider.titulo = "Mudando";
+  }
+
+  @override
+  void onResume() {
+    // onResume é após o carregamendo da tela para buscar no servidor...
+    super.onResume();
+    provider.getDadosApi();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(provider.titulo);
   }
 }
 ```

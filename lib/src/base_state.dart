@@ -5,19 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 abstract class BaseState<T extends StatefulWidget, C extends ChangeNotifier> extends State<T> with Loader, Messages {
-  late final C controller;
+  late final C provider;
 
   @override
   void initState() {
     super.initState();
-    controller = context.read<C>();
+    provider = context.read<C>();
     onInit();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      onGet();
+      onResume();
     });
   }
 
   void onInit() {}
 
-  void onGet() {}
+  void onResume() {}
 }
