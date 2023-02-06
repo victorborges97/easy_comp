@@ -10,6 +10,7 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
+
 ## Features
 
 1. Inclue BaseWidget
@@ -18,26 +19,29 @@ and the Flutter guide for
 ## Instalação
 
 1. Adicione a ultima versão ao arquivo pubspec.yaml (e rode 'dart pub get');
+
 ```yaml
 dependencies:
-  easy_comp: ^0.0.1
+    easy_comp: ^0.0.1
 ```
 
 2. Importe o pacote para usar no seu App Flutter
+
 ```dart
 import 'package:easy_comp/easy_comp.dart';
 ```
 
 ## Usage
 
-* Usando componente StatelessWidget
+-   Usando componente StatelessWidget
+
 ```dart
 import 'package:flutter/material.dart';
 import 'package:easy_comp/easy_comp.dart';
 
 class EasyCompTeste extends BaseWidget {
   EasyCompTeste({Key? key});
-  
+
   @override
   Widget builder(BuildContext context, BoxConstraints constrains) {
     return Container(
@@ -49,7 +53,8 @@ class EasyCompTeste extends BaseWidget {
 }
 ```
 
-* Usando componente StatefulWidget
+-   Usando componente StatefulWidget
+
 ```dart
 import 'package:flutter/material.dart';
 import 'package:easy_comp/easy_comp.dart';
@@ -71,9 +76,3 @@ class _EasyCompTesteState extends BasefulWidgetState<EasyCompTeste> {
   }
 }
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.

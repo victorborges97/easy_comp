@@ -1,10 +1,10 @@
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flutter/cupertino.dart';
 
 var duration = const Duration(milliseconds: 300);
 
 bool emailValid(String email) {
-  final RegExp regex = RegExp(
-      r"^(([^<>()[\]\\.,;:\s@\']+(\.[^<>()[\]\\.,;:\s@\']+)*)|(\'.+\'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$");
+  final RegExp regex = RegExp(r"^(([^<>()[\]\\.,;:\s@\']+(\.[^<>()[\]\\.,;:\s@\']+)*)|(\'.+\'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$");
   return regex.hasMatch(email);
 }
 
@@ -33,12 +33,9 @@ class ValidatorUtil {
   /// Tests [value] against defined [validations]
   String? _test(String? value) {
     for (var validate in validations) {
-      // Return null if field is optional and value is null
       if (optional && (value == null || value.isEmpty)) {
         return null;
       }
-
-      // Otherwise execute validations
       final result = validate(value);
       if (result != null) {
         return result;
@@ -49,15 +46,10 @@ class ValidatorUtil {
 
   Future<String?> _testF(String? value) async {
     for (var validate in validationsF) {
-      // Return null if field is optional and value is null
       if (optional && (value == null || value.isEmpty)) {
         return Future.value(null);
       }
-
-      // Otherwise execute validations
-      print("Validando: ${value}");
       final result = await validate(value);
-      print("Validando: ${result}");
       if (result != null) {
         return Future.value(result);
       }
@@ -71,50 +63,37 @@ class ValidatorUtil {
   StringValidationCallbackFuture buildFuture() => _testF;
 
   /// Value must not be null or empty
-  ValidatorUtil required([String? message = "Campo requerido"]) => isFuture
-      ? _addF((v) => Future.delayed(duration, () => (v == null || v.isEmpty))
-      .then((value) => value ? message : null))
-      : _add((v) => (v == null || v.isEmpty) ? message : null);
+  ValidatorUtil required([String? message = "Campo requerido"]) =>
+      isFuture ? _addF((v) => Future.delayed(duration, () => (v == null || v.isEmpty)).then((value) => value ? message : null)) : _add((v) => (v == null || v.isEmpty) ? message : null);
 
   /// Value length must be greater than or equal to [minLength]
-  ValidatorUtil minLength(int minLength,
-      [String? message = "Tamanho inválido"]) =>
-      isFuture
-          ? _addF((v) => Future.delayed(duration, () => v!.length < minLength)
-          .then((value) => value ? message : null))
-          : _add((v) => v!.length < minLength ? message : null);
+  ValidatorUtil minLength(int minLength, [String? message = "Tamanho inválido"]) =>
+      isFuture ? _addF((v) => Future.delayed(duration, () => v!.length < minLength).then((value) => value ? message : null)) : _add((v) => v!.length < minLength ? message : null);
 
   /// Value length must be less than or equal to [maxLength]
-  ValidatorUtil maxLength(int maxLength,
-      [String? message = "Tamanho inválido"]) =>
-      isFuture
-          ? _addF((v) => Future.delayed(duration, () => v!.length > maxLength)
-          .then((value) => value ? message : null))
-          : _add((v) => v!.length > maxLength ? message : null);
+  ValidatorUtil maxLength(int maxLength, [String? message = "Tamanho inválido"]) =>
+      isFuture ? _addF((v) => Future.delayed(duration, () => v!.length > maxLength).then((value) => value ? message : null)) : _add((v) => v!.length > maxLength ? message : null);
 
   ValidatorUtil email([String? message = "E-mail inválido"]) {
-    print(isFuture);
-    return isFuture
-        ? _addF((v) => Future.delayed(duration, () => !emailValid(v!))
-        .then((value) => value ? message : null))
-        : _add((v) => !emailValid(v!) ? message : null);
+    return isFuture ? _addF((v) => Future.delayed(duration, () => !emailValid(v!)).then((value) => value ? message : null)) : _add((v) => !emailValid(v!) ? message : null);
   }
 
-  ValidatorUtil cpf([String? message = "CPF inválido"]) => isFuture
-      ? _addF((v) => Future.delayed(duration, () => !CPFValidator.isValid(v))
-      .then((value) => value ? message : null))
-      : _add((v) => !CPFValidator.isValid(v) ? message : null);
+  ValidatorUtil compareController(TextEditingController to, TextEditingController compareTo, [String? message = "E-mail inválido"]) {
+    return isFuture ? _addF((v) => Future.delayed(duration, () => (to.text != compareTo.text)).then((value) => value ? message : null)) : _add((v) => (to.text != compareTo.text) ? message : null);
+  }
 
-  ValidatorUtil cnpj([String? message = "CNPJ inválido"]) => isFuture
-      ? _addF((v) => Future.delayed(duration, () => !CNPJValidator.isValid(v))
-      .then((value) => value ? message : null))
-      : _add((v) => !CNPJValidator.isValid(v) ? message : null);
+  ValidatorUtil compareString(String to, String compareTo, [String? message = "E-mail inválido"]) {
+    return isFuture ? _addF((v) => Future.delayed(duration, () => (to != compareTo)).then((value) => value ? message : null)) : _add((v) => (to != compareTo) ? message : null);
+  }
 
-  ValidatorUtil cpfOuCnpj([String? message = "Documento inválido"]) => isFuture
-      ? _addF((v) => /*Future.delayed(duration, () => valideCpfOuCnpj(v!))*/
-  Future.value(valideCpfOuCnpj(v!))
-      .then((value) => value ? message : null))
-      : _add((v) => valideCpfOuCnpj(v!) ? message : null);
+  ValidatorUtil cpf([String? message = "CPF inválido"]) =>
+      isFuture ? _addF((v) => Future.delayed(duration, () => !CPFValidator.isValid(v)).then((value) => value ? message : null)) : _add((v) => !CPFValidator.isValid(v) ? message : null);
+
+  ValidatorUtil cnpj([String? message = "CNPJ inválido"]) =>
+      isFuture ? _addF((v) => Future.delayed(duration, () => !CNPJValidator.isValid(v)).then((value) => value ? message : null)) : _add((v) => !CNPJValidator.isValid(v) ? message : null);
+
+  ValidatorUtil cpfOuCnpj([String? message = "Documento inválido"]) => isFuture ? _addF((v) => /*Future.delayed(duration, () => valideCpfOuCnpj(v!))*/
+      Future.value(valideCpfOuCnpj(v!)).then((value) => value ? message : null)) : _add((v) => valideCpfOuCnpj(v!) ? message : null);
 
   ValidatorUtil custom({
     Future<bool> Function(String?)? future,
@@ -122,14 +101,12 @@ class ValidatorUtil {
     String? message = "Inválido",
   }) =>
       isFuture
-          ? _addF((v) => future == null
-          ? Future.delayed(Duration(milliseconds: 500), () => null)
-          : future(v).then((value) => value ? message : null))
+          ? _addF((v) => future == null ? Future.delayed(Duration(milliseconds: 500), () => null) : future(v).then((value) => value ? message : null))
           : _add((v) => valide == null
-          ? null
-          : valide(v)
-          ? message
-          : null);
+              ? null
+              : valide(v)
+                  ? message
+                  : null);
 }
 
 bool valideCpfOuCnpj(String value) {
@@ -142,5 +119,4 @@ bool valideCpfOuCnpj(String value) {
 }
 
 typedef StringValidationCallback = String? Function(String? value);
-typedef StringValidationCallbackFuture = Future<String?> Function(
-    String? value);
+typedef StringValidationCallbackFuture = Future<String?> Function(String? value);

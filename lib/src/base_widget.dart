@@ -1,9 +1,12 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 //StatefulWidget
 abstract class BasefulWidget extends StatefulWidget {
   BasefulWidget({Key? key}) : super(key: key);
 }
+
 abstract class BasefulWidgetState<T extends StatefulWidget> extends State<T> {
   @override
   void initState() {
