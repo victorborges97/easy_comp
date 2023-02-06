@@ -6,3 +6,7 @@
 
 -   Incluindo compare(String e TextEditingController) em ValidatorUtil();
 -   Incluindo BaseState para usar em Base do StatefulWidget, onde o BaseState precisa <StatefulWidget, Provider>;
+
+## 0.0.3
+
+-   Atualizando BaseState.

@@ -1,5 +1,5 @@
 import 'package:easy_comp/src/base_state.dart';
-import 'package:easy_comp/src/provider_basestate.dart';
+import 'package:easy_comp/src/testes/provider_basestate.dart';
 import 'package:flutter/material.dart';
 
 class TesteBaseState extends StatefulWidget {
