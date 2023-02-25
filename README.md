@@ -17,6 +17,7 @@ and the Flutter guide for
 2. BasefulWidget
 3. BaseState
 4. ValidatorUtil
+5. FirebaseFirestoreRepository
 
 ## Instalação
 

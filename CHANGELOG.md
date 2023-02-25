@@ -14,4 +14,8 @@
 ## 0.0.4
 
 -   Adicionando FirebaseFirestoreRepository<Modelo>, que é um repositorio com algumas funções prontas para um modelo especifico.
--   Espondo o BaseState.
+-   Expondo o BaseState.
+
+## 0.0.5
+
+-   Expondo função do utils
