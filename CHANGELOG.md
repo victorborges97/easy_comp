@@ -10,3 +10,8 @@
 ## 0.0.3
 
 -   Atualizando BaseState.
+
+## 0.0.4
+
+-   Adicionando FirebaseFirestoreRepository<Modelo>, que é um repositorio com algumas funções prontas para um modelo especifico.
+-   Espondo o BaseState.

@@ -78,11 +78,11 @@ class ValidatorUtil {
     return isFuture ? _addF((v) => Future.delayed(duration, () => !emailValid(v!)).then((value) => value ? message : null)) : _add((v) => !emailValid(v!) ? message : null);
   }
 
-  ValidatorUtil compareController(TextEditingController to, TextEditingController compareTo, [String? message = "E-mail inválido"]) {
+  ValidatorUtil compareController(TextEditingController to, TextEditingController compareTo, [String? message = "Campo divergente"]) {
     return isFuture ? _addF((v) => Future.delayed(duration, () => (to.text != compareTo.text)).then((value) => value ? message : null)) : _add((v) => (to.text != compareTo.text) ? message : null);
   }
 
-  ValidatorUtil compareString(String to, String compareTo, [String? message = "E-mail inválido"]) {
+  ValidatorUtil compareString(String to, String compareTo, [String? message = "Campo divergente"]) {
     return isFuture ? _addF((v) => Future.delayed(duration, () => (to != compareTo)).then((value) => value ? message : null)) : _add((v) => (to != compareTo) ? message : null);
   }
 
