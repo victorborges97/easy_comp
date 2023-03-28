@@ -259,14 +259,7 @@ class FirebaseFirestoreRepository<T> extends FirebaseFirestoreService<T> {
   }
 }
 
-enum QueryOperation {
-  isEqualTo,
-  isLessThan,
-  isLessThanOrEqualTo,
-  isGreaterThan,
-  isGreaterThanOrEqualTo,
-  arrayContains,
-}
+enum QueryOperation { isEqualTo, isLessThan, isLessThanOrEqualTo, isGreaterThan, isGreaterThanOrEqualTo, arrayContains, whereIn, whereNotIn, arrayContainsAny, isNull, isNotEqualTo }
 
 class QueryConstraint {
   final String field;
@@ -289,6 +282,16 @@ class QueryConstraint {
         return query.where(field, isGreaterThanOrEqualTo: value);
       case QueryOperation.arrayContains:
         return query.where(field, arrayContains: value);
+      case QueryOperation.whereIn:
+        return query.where(field, whereIn: value);
+      case QueryOperation.whereNotIn:
+        return query.where(field, whereNotIn: value);
+      case QueryOperation.arrayContainsAny:
+        return query.where(field, arrayContainsAny: value);
+      case QueryOperation.isNull:
+        return query.where(field, isNull: value);
+      case QueryOperation.isNotEqualTo:
+        return query.where(field, isNotEqualTo: value);
     }
   }
 }

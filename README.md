@@ -25,7 +25,7 @@ and the Flutter guide for
 
 ```yaml
 dependencies:
-    easy_comp: ^0.0.4
+    easy_comp: ^0.0.6
 ```
 
 2. Importe o pacote para usar no seu App Flutter

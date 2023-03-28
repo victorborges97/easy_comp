@@ -19,3 +19,7 @@
 ## 0.0.5
 
 -   Expondo função do utils
+
+## 0.0.6
+
+-   Adicionando mais opções de filtros no FirebaseFirestoreRepository
