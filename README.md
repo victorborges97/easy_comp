@@ -18,6 +18,7 @@ and the Flutter guide for
 3. BaseState
 4. ValidatorUtil
 5. FirebaseFirestoreRepository
+6. CustomFuture
 
 ## Instalação
 
@@ -25,7 +26,7 @@ and the Flutter guide for
 
 ```yaml
 dependencies:
-    easy_comp: ^0.0.6
+    easy_comp: ^0.0.9
 ```
 
 2. Importe o pacote para usar no seu App Flutter
@@ -94,11 +95,9 @@ class TesteBaseState extends StatefulWidget {
 }
 
 class _TesteBaseStateState extends BaseState<TesteBaseState, ProviderBaseState> {
-  // Contem a variavel provider para pegar os dados do ProviderBaseState;
 
   @override
   void onInit() {
-    // onInit é o InitState
     super.onInit();
     debugPrint(provider.titulo);
 
@@ -107,7 +106,6 @@ class _TesteBaseStateState extends BaseState<TesteBaseState, ProviderBaseState> 
 
   @override
   void onResume() {
-    // onResume é após o carregamendo da tela para buscar no servidor...
     super.onResume();
     provider.getDadosApi();
   }
@@ -121,14 +119,12 @@ class _TesteBaseStateState extends BaseState<TesteBaseState, ProviderBaseState> 
 
 -   Usando componente FirebaseFirestoreRepository
 
-````dart
+```dart
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_comp/easy_comp.dart';
 import 'package:easy_comp/src/utils/utils.dart';
-
-/// Primeiro você cria seu Model e Repositorio.
 
 class TesteModel {
   String id = "";
@@ -164,36 +160,6 @@ class TesteModel {
 }
 
 class TesteRepository extends FirebaseFirestoreRepository<TesteModel> {
-  /// Esse é um repositorio teste, mostrando com se usa a lib FirebaseFirestoreRepository<TesteModel>()\n
-  ///
-  /// Example:
-  /// ```dart
-  /// class TesteRepository extends FirebaseFirestoreRepository<TesteModel> {
-  ///   TesteRepository()
-  ///    : super(
-  ///        collectionPath: 'BAIRROS',
-  ///        firestore: FirebaseFirestore.instance,
-  ///        fromJson: TesteModel.fromJson,
-  ///        toJson: TesteModel.toJson,
-  ///      );
-  ///   @override
-  ///   CollectionReference<TesteModel> get collection => super.collection;
-  ///
-  ///   Future<List<TesteModel>> todosByCategoria() async {
-  ///     final lista = await collection.where("categoria", isEqualTo: "INITIAL").get().then((value) => value.docs.map((e) => e.data()).toList());
-  ///     return lista;
-  ///   }
-  /// }
-  ///
-  /// void main() {
-  ///   final repo = TesteRepository();
-  ///   final todos = await repo.buscarTodos();
-  ///   log(todos.toString());
-  ///
-  ///   final todosCat = await repo.todosByCategoria();
-  ///   log(todosCat.toString());
-  /// }
-  /// ```
   TesteRepository()
       : super(
           collectionPath: 'BAIRROS',
@@ -202,12 +168,9 @@ class TesteRepository extends FirebaseFirestoreRepository<TesteModel> {
           toJson: TesteModel.toJson,
         );
 
-  /// Com essa referencia pode criar novas funcões personalizas para seu Modelo.
   @override
   CollectionReference<TesteModel> get collection => super.collection;
 
-  /// Exemplo de função personalizada
-  /// Vamos criar uma que retorna todos com a categoria INITIAL.
   Future<List<TesteModel>> todosByCategoria() async {
     final lista = await collection.where("categoria", isEqualTo: "INITIAL").get().then((value) => value.docs.map((e) => e.data()).toList());
     return lista;
@@ -229,4 +192,48 @@ void main() async {
   );
   log(todos.toString());
 }
-````
+```
+
+-   Usando componente CustomFuture
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:easy_comp/easy_comp.dart';
+
+class EasyCompTeste extends BaseWidget {
+  EasyCompTeste({Key? key});
+
+  Future<List<String>> getValues() async {
+    await Future.delayed(const Duration(seconds: 2));
+    return ["1", "2", "3"];
+  }
+
+  @override
+  Widget builder(BuildContext context, BoxConstraints constrains) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Teste"),
+      ),
+      body: CustomFuture<List<String>>(
+        future: getValues(),
+        emptyWidget: const Text("Empty"),
+        withLoading: true,
+        withError: true,
+        erroBuilder: (error) {
+          return Text(error.toString());
+        },
+        builder: (values) {
+          return ListView.builder(
+            itemCount: values.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(values[index]),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+```

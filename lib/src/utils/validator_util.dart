@@ -101,7 +101,7 @@ class ValidatorUtil {
     String? message = "Inválido",
   }) =>
       isFuture
-          ? _addF((v) => future == null ? Future.delayed(Duration(milliseconds: 500), () => null) : future(v).then((value) => value ? message : null))
+          ? _addF((v) => future == null ? Future.delayed(const Duration(milliseconds: 500), () => null) : future(v).then((value) => value ? message : null))
           : _add((v) => valide == null
               ? null
               : valide(v)

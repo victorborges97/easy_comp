@@ -4,28 +4,13 @@ import 'package:flutter/material.dart';
 
 //StatefulWidget
 abstract class BasefulWidget extends StatefulWidget {
-  BasefulWidget({Key? key}) : super(key: key);
+  const BasefulWidget({Key? key}) : super(key: key);
 }
 
 abstract class BasefulWidgetState<T extends StatefulWidget> extends State<T> {
   @override
   void initState() {
     super.initState();
-
-    /// Load app config on every single page if the appConfig is not init
-    // if (kIsWeb) {
-    //   Future.delayed(Duration.zero, () async {
-    //     var appModel = Provider.of<AppModel>(context, listen: false);
-    //     if (appModel.appConfig == null) {
-    //       // ignore: avoid_print
-    //
-    //       /// set the server config at first loading
-    //       Services().setAppConfig(serverConfig);
-    //       await appModel.loadAppConfig();
-    //     }
-    //   });
-    // }
-
     WidgetsBinding.instance.addPostFrameCallback((_) => afterFirstLayout(context));
   }
 
@@ -34,10 +19,11 @@ abstract class BasefulWidgetState<T extends StatefulWidget> extends State<T> {
   /// Get size screen
   Size get screenSize => MediaQuery.of(context).size;
 
-  Future<T?> showAlert<T>({
+  // ignore: avoid_shadowing_type_parameters
+  Future<T?> showAlert<T extends Object?>({
     required Widget child,
   }) {
-    return showDialog<T>(
+    return showDialog<T?>(
       context: context,
       builder: (c) => child,
     );

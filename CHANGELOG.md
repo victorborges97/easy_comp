@@ -23,3 +23,15 @@
 ## 0.0.6
 
 -   Adicionando mais opções de filtros no FirebaseFirestoreRepository
+
+## 0.0.7
+
+-   Alterando CustomFuture e CustomStream
+
+## 0.0.8
+
+-   Alterando CustomLoading com error no context, adicionando AppColors, AppText, AppTheme no context para padronizar o app no theme data.
+
+## 0.0.9
+
+-   Voltando a versao de libs externas

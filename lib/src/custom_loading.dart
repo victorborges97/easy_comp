@@ -51,7 +51,8 @@ class CustomLoading {
     double borderRadius = 8.0,
     bool barrierDismissible = false,
   }) {
-    _current = LoadDialog(
+    _current ??= LoadDialog(
+      context: _context,
       msg: msg,
       borderRadius: borderRadius,
       msgMaxLines: msgMaxLines,
@@ -73,80 +74,13 @@ class CustomLoading {
       barrierColor: barrierColor,
       context: _context,
       builder: (context) => WillPopScope(
-        child: _current ??
-            LoadDialog(
-              msg: msg,
-              borderRadius: borderRadius,
-              msgMaxLines: msgMaxLines,
-              msgFontSize: msgFontSize,
-              valueFontSize: valueFontSize,
-              valuePosition: valuePosition,
-              backgroundColor: backgroundColor,
-              barrierColor: barrierColor,
-              progressValueColor: progressValueColor,
-              progressBgColor: progressBgColor,
-              valueColor: valueColor,
-              msgColor: msgColor,
-              msqFontWeight: msqFontWeight,
-              valueFontWeight: valueFontWeight,
-            ),
+        child: _current!,
         onWillPop: () => Future.value(
           barrierDismissible,
         ),
       ),
     );
   }
-
-// Center(
-//   child: Container(
-//     decoration: BoxDecoration(
-//       borderRadius: BorderRadius.all(
-//         Radius.circular(borderRadius),
-//       ),
-//       color: backgroundColor,
-//     ),
-//     width: msg != null ? 180 : 90,
-//     height: 90,
-//     child:  Center(
-//       child: ValueListenableBuilder(
-//         valueListenable: _progress,
-//         builder: (BuildContext context, dynamic value, Widget? child) {
-//           if (value == max) close();
-//           return Row(
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               Container(
-//                 child: _normalProgress(
-//                   bgColor: progressBgColor,
-//                   valueColor: progressValueColor,
-//                 ),
-//               ),
-//               Visibility(
-//                 visible: msg != null,
-//                 child: Padding(
-//                   padding: const EdgeInsets.only(
-//                     left: 8.0,
-//                   ),
-//                   child: Text(
-//                     _msg.value,
-//                     maxLines: msgMaxLines,
-//                     overflow: TextOverflow.ellipsis,
-//                     style: TextStyle(
-//                       fontSize: msgFontSize,
-//                       color: msgColor,
-//                       fontWeight: FontWeight.bold,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           );
-//         },
-//       ),
-//     ),
-//   ),
-// )
 }
 
 mixin IDialogService {
@@ -178,7 +112,8 @@ class LoadDialog extends IDialog {
   final int msgMaxLines;
 
   LoadDialog({
-    Key? key,
+    super.key,
+    required BuildContext context,
     this.msg,
     this.valuePosition = ValuePosition.right,
     this.backgroundColor = Colors.black45,
@@ -194,7 +129,9 @@ class LoadDialog extends IDialog {
     this.elevation = 2.0,
     this.borderRadius = 8.0,
     this.msgMaxLines = 1,
-  }) : super(key: key);
+  }) {
+    _context = context;
+  }
 
   final ValueNotifier _progress = ValueNotifier(1);
   final ValueNotifier _msg = ValueNotifier('');
@@ -211,11 +148,10 @@ class LoadDialog extends IDialog {
     );
   }
 
-  BuildContext? _context;
+  late BuildContext _context;
 
   @override
   Widget build(BuildContext context) {
-    _context = context;
     if (msg != null) _msg.value = msg;
     return Center(
       child: Container(
@@ -270,7 +206,7 @@ class LoadDialog extends IDialog {
 
   @override
   void dismiss() {
-    Navigator.pop(_context!);
+    Navigator.pop(_context);
   }
 
   @override
