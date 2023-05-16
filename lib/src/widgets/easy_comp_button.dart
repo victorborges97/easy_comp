@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ButtonApp extends StatefulWidget {
-  const ButtonApp({
+class EasyCompButton extends StatefulWidget {
+  const EasyCompButton({
     super.key,
     this.onPressed,
     this.text,
@@ -25,7 +25,7 @@ class ButtonApp extends StatefulWidget {
     this.autofocus = false,
   });
 
-  const ButtonApp.grid({
+  const EasyCompButton.grid({
     super.key,
     this.onPressed,
     this.text,
@@ -71,10 +71,10 @@ class ButtonApp extends StatefulWidget {
   final bool isRounded;
 
   @override
-  State<ButtonApp> createState() => _ButtonAppState();
+  State<EasyCompButton> createState() => _EasyCompButtonState();
 }
 
-class _ButtonAppState extends State<ButtonApp> {
+class _EasyCompButtonState extends State<EasyCompButton> {
   bool confirmLoading() {
     if (widget.loading != null && widget.loading == true) {
       return true;

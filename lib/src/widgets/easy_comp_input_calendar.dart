@@ -1,26 +1,28 @@
+import 'package:easy_comp/src/widgets/easy_comp_input.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-class InputCalendar extends StatefulWidget {
+class EasyCompInputCalendar extends StatefulWidget {
   final bool multiplos;
   final String? labelText;
+  final String? formatter;
   final Function(DateTime)? onChange1;
   final Function(DateTime, DateTime)? onChange2;
 
-  const InputCalendar({super.key, this.labelText, required Function(DateTime) onChange})
+  const EasyCompInputCalendar({super.key, this.labelText, this.formatter, required Function(DateTime) onChange})
       : multiplos = false,
         onChange1 = onChange,
         onChange2 = null;
 
-  const InputCalendar.multiplos({super.key, this.labelText, required Function(DateTime, DateTime) onChange})
+  const EasyCompInputCalendar.multiplos({super.key, this.labelText, this.formatter, required Function(DateTime, DateTime) onChange})
       : multiplos = true,
         onChange1 = null,
         onChange2 = onChange;
   @override
-  State<InputCalendar> createState() => _InputCalendarState();
+  State<EasyCompInputCalendar> createState() => _EasyCompInputCalendarState();
 }
 
-class _InputCalendarState extends State<InputCalendar> {
+class _EasyCompInputCalendarState extends State<EasyCompInputCalendar> {
   final _textEditingController = TextEditingController();
   final GlobalKey _textFieldKey = GlobalKey();
   OverlayEntry? _overlayEntry;
@@ -64,6 +66,7 @@ class _InputCalendarState extends State<InputCalendar> {
 
     String diaSelecionado1 = "";
     String diaSelecionado2 = "";
+    String diaSelecionado3 = "";
 
     final PageController controllerPageView = PageController(initialPage: CalendarGen.month_names.toList().indexOf(mes));
 
@@ -100,6 +103,7 @@ class _InputCalendarState extends State<InputCalendar> {
                         icon: const Icon(Icons.arrow_left),
                         splashRadius: 5,
                         onPressed: () {
+                          print(controllerPageView.page!);
                           if (controllerPageView.page! <= 0) {
                             set(() {
                               ano--;
@@ -166,17 +170,27 @@ class _InputCalendarState extends State<InputCalendar> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       ...CalendarGen.semana_names.map((e) => Center(child: Text(e))).toList(),
-                      ...CalendarGen.getDaysOfMonthByYear(CalendarGen.month_data[mes], ano)
+                      ...CalendarGen.tratarDiasEmpty(
+                        CalendarGen.getDaysOfMonthByYear(CalendarGen.month_data[mes], ano),
+                        CalendarGen.month_data[mes],
+                        ano,
+                      )
                           .map(
                             (e) => InkWell(
                               onTap: () {
+                                if (e.dayMonthOld) {
+                                  controllerPageView.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+                                  return;
+                                }
                                 // 2 data
                                 if (widget.multiplos) {
                                   if (diaSelecionado1.isEmpty && diaSelecionado2.isEmpty) {
                                     set(() {
                                       diaSelecionado1 = e.dia;
                                     });
-                                  } else if (diaSelecionado1.isNotEmpty && diaSelecionado2.isEmpty) {
+                                  }
+                                  //
+                                  else if (diaSelecionado1.isNotEmpty && diaSelecionado2.isEmpty && diaSelecionado3.isEmpty) {
                                     set(() {
                                       diaSelecionado2 = e.dia;
                                     });
@@ -185,11 +199,15 @@ class _InputCalendarState extends State<InputCalendar> {
                                     final data2 = DateTime(ano, int.parse(CalendarGen.month_data[mes].toString()), int.parse(diaSelecionado2));
                                     _textEditingController.text = "${data1.day}/${data1.month}/${data1.year} - ${data2.day}/${data2.month}/${data2.year}";
                                     widget.onChange2!(data1, data2);
-                                  }
 
-                                  if (diaSelecionado1.isNotEmpty && diaSelecionado2.isNotEmpty) {
+                                    diaSelecionado3 = "-";
+                                  }
+                                  //
+                                  else if (diaSelecionado1.isNotEmpty && diaSelecionado2.isNotEmpty && diaSelecionado3.isNotEmpty) {
                                     set(() {
                                       diaSelecionado1 = e.dia;
+                                      diaSelecionado2 = "";
+                                      diaSelecionado3 = "";
                                     });
                                   }
                                 }
@@ -213,11 +231,11 @@ class _InputCalendarState extends State<InputCalendar> {
                               },
                               child: Builder(builder: (context) {
                                 return Container(
-                                  decoration: dbox(diaSelecionado1, diaSelecionado2, e),
+                                  decoration: dbox(diaSelecionado1, diaSelecionado2, e, ano, CalendarGen.month_data[mes]!),
                                   child: Center(
                                     child: Text(
                                       e.dia,
-                                      style: stext(diaSelecionado1, diaSelecionado2, e),
+                                      style: stext(diaSelecionado1, diaSelecionado2, e, ano, CalendarGen.month_data[mes]!),
                                     ),
                                   ),
                                 );
@@ -245,7 +263,40 @@ class _InputCalendarState extends State<InputCalendar> {
                     ElevatedButton(
                       onPressed: () {
                         if (widget.multiplos) {
-                        } else {
+                          if (diaSelecionado1.isEmpty && diaSelecionado2.isEmpty) {
+                            set(() {
+                              errorMessage = "Selecione duas datas.";
+                            });
+                            Future.delayed(
+                                const Duration(seconds: 2),
+                                () => set(() {
+                                      errorMessage = "";
+                                    }));
+                            return;
+                          } else if (diaSelecionado1.isNotEmpty && diaSelecionado2.isEmpty) {
+                            set(() {
+                              errorMessage = "Selecione a 2º data.";
+                            });
+                            Future.delayed(
+                                const Duration(seconds: 2),
+                                () => set(() {
+                                      errorMessage = "";
+                                    }));
+                            return;
+                          } else if (diaSelecionado2.isNotEmpty && diaSelecionado1.isEmpty) {
+                            set(() {
+                              errorMessage = "Selecione a 1º data.";
+                            });
+                            Future.delayed(
+                                const Duration(seconds: 2),
+                                () => set(() {
+                                      errorMessage = "";
+                                    }));
+                            return;
+                          }
+                        }
+                        //
+                        else {
                           if (diaSelecionado1.isEmpty) {
                             set(() {
                               errorMessage = "Selecione um data.";
@@ -279,7 +330,7 @@ class _InputCalendarState extends State<InputCalendar> {
       final textFieldOffset = textFieldBox.localToGlobal(Offset.zero);
       final textFieldSize = textFieldBox.size;
       const double overlayWidth = 300;
-      const double overlayHeight = 340;
+      const double overlayHeight = 360;
       final double x = textFieldOffset.dx + textFieldSize.width - overlayWidth;
       final double y = textFieldOffset.dy + textFieldSize.height;
 
@@ -305,20 +356,21 @@ class _InputCalendarState extends State<InputCalendar> {
     }
   }
 
-  BoxDecoration dbox(String diaSelecionado1, String diaSelecionado2, DiaData e) {
+  BoxDecoration dbox(String diaSelecionado1, String diaSelecionado2, DiaData e, int anoSelecionado, int mes) {
+    print("mes: $mes - ano: $anoSelecionado");
     if (e.dia.trim().isEmpty) {
       return BoxDecoration(
         borderRadius: BorderRadius.circular(5),
       );
     }
-
+    bool anoEmesOk = e.ano == anoSelecionado && e.month == mes;
     if (widget.multiplos) {
       bool valoresOk = diaSelecionado1.isNotEmpty && diaSelecionado2.isNotEmpty;
 
       return BoxDecoration(
-        color: valoresOk && isValueInRange(int.parse(e.dia), int.parse(diaSelecionado1), int.parse(diaSelecionado2))
+        color: valoresOk && anoEmesOk && isValueInRange(int.parse(e.dia), int.parse(diaSelecionado1), int.parse(diaSelecionado2))
             ? Theme.of(context).primaryColor.withOpacity(0.8)
-            : diaSelecionado1 == e.dia
+            : (diaSelecionado1 == e.dia && anoEmesOk)
                 ? Theme.of(context).primaryColor.withOpacity(0.8)
                 : e.isToday
                     ? Theme.of(context).primaryColor
@@ -327,7 +379,7 @@ class _InputCalendarState extends State<InputCalendar> {
       );
     } else {
       return BoxDecoration(
-        color: diaSelecionado1 == e.dia
+        color: (diaSelecionado1 == e.dia && anoEmesOk)
             ? Theme.of(context).primaryColor.withOpacity(0.8)
             : e.isToday
                 ? Theme.of(context).primaryColor
@@ -337,20 +389,26 @@ class _InputCalendarState extends State<InputCalendar> {
     }
   }
 
-  TextStyle stext(String diaSelecionado1, String diaSelecionado2, DiaData e) {
+  TextStyle stext(String diaSelecionado1, String diaSelecionado2, DiaData e, int anoSelecionado, int mes) {
     if (e.dia.trim().isEmpty) {
       return TextStyle();
     }
 
     if (widget.multiplos) {
       bool valoresOk = diaSelecionado1.isNotEmpty && diaSelecionado2.isNotEmpty;
+      bool anoEmesOk = e.ano == anoSelecionado && e.month == mes;
 
       return TextStyle(
-        color: e.isToday || (valoresOk && isValueInRange(int.parse(e.dia), int.parse(diaSelecionado1), int.parse(diaSelecionado2))) ? Colors.white : null,
+        color: e.isToday || (valoresOk && anoEmesOk && isValueInRange(int.parse(e.dia), int.parse(diaSelecionado1), int.parse(diaSelecionado2)))
+            ? Colors.white
+            : e.dayMonthOld
+                ? Colors.grey.shade600.withOpacity(0.8)
+                : null,
       );
     } else {
+      bool anoEmesOk = e.ano == anoSelecionado && e.month == mes;
       return TextStyle(
-        color: e.isToday || diaSelecionado1 == e.dia ? Colors.white : null,
+        color: e.isToday || (diaSelecionado1 == e.dia && anoEmesOk) ? Colors.white : null,
       );
     }
   }
@@ -361,25 +419,27 @@ class _InputCalendarState extends State<InputCalendar> {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: TextField(
+          child: EasyCompInput(
             focusNode: _focusTextField,
             key: _textFieldKey,
             controller: _textEditingController,
-            decoration: InputDecoration(
-              labelText: widget.labelText ?? 'Data',
-              suffixIcon: IconButton(
-                onPressed: true
-                    ? null
-                    : () {
-                        if (_overlayEntry != null) {
-                          hideOverlay();
-                        } else {
-                          showOverlay();
-                        }
-                      },
-                icon: const Icon(Icons.calendar_month),
-              ),
-            ),
+            labelText: widget.labelText ?? 'Data',
+            icon: const Icon(Icons.calendar_month),
+            // decoration: InputDecoration(
+            //   labelText: widget.labelText ?? 'Data',
+            //   suffixIcon: IconButton(
+            //     onPressed: true
+            //         ? null
+            //         : () {
+            //             if (_overlayEntry != null) {
+            //               hideOverlay();
+            //             } else {
+            //               showOverlay();
+            //             }
+            //           },
+            //     icon: const Icon(Icons.calendar_month),
+            //   ),
+            // ),
             onTap: () {
               if (_overlayEntry != null) {
                 hideOverlay();
@@ -439,11 +499,48 @@ class CalendarGen {
       }
 
       if (first_day.weekday == 7 && day == "  ") {
+        print("first_day.weekday == 7 && day == " "");
       } else {
-        mesDays.add(DiaData(dia: day.replaceAll("+", ""), isToday: day.contains("+") ? true : false));
+        mesDays.add(
+          DiaData(
+            dia: day.replaceAll("+", ""),
+            ano: year,
+            month: month,
+            isToday: day.contains("+") ? true : false,
+          ),
+        );
+      }
+    }
+    return mesDays;
+  }
+
+  static List<DiaData> tratarDiasEmpty(List<DiaData> mesDays, month, year) {
+    final diasSemNada = mesDays.where((element) => element.dia.trim().isEmpty);
+
+    //
+    if (diasSemNada.isNotEmpty) {
+      final diasDoMes = getDaysOfMonthByYear(month == 1 ? 12 : month - 1, year);
+
+      final diasDoMesReversed = diasDoMes.reversed.toList().getRange(0, (diasSemNada.length)).toList();
+
+      final diasDoMesAnterior = diasDoMesReversed.reversed.toList();
+
+      if (diasDoMesAnterior.isNotEmpty) {
+        for (var i = 0; i < mesDays.length; i++) {
+          var dia = mesDays[i];
+          if (dia.dia.trim().isEmpty) {
+            mesDays[i] = dia.copyWith(
+              dayMonthOld: true,
+              dia: diasDoMesAnterior[i].dia,
+              month: month == 1 ? 12 : month - 1,
+              ano: year,
+            );
+          }
+        }
       }
     }
 
+    print(mesDays);
     return mesDays;
   }
 
@@ -468,10 +565,35 @@ class CalendarGen {
 
 class DiaData {
   String dia;
+  int ano;
+  int month;
   bool isToday;
-  late String id;
-  DiaData({required this.dia, this.isToday = false}) {
-    id = const Uuid().v4();
+  bool dayMonthOld;
+  String id;
+
+  DiaData({required this.dia, required this.ano, required this.month, this.isToday = false, this.dayMonthOld = false, String? id}) : id = id ?? const Uuid().v4();
+
+  DiaData copyWith({
+    String? dia,
+    bool? isToday,
+    bool? dayMonthOld,
+    String? id,
+    int? ano,
+    int? month,
+  }) {
+    return DiaData(
+      dia: dia ?? this.dia,
+      ano: ano ?? this.ano,
+      month: month ?? this.month,
+      dayMonthOld: dayMonthOld ?? this.dayMonthOld,
+      isToday: isToday ?? this.isToday,
+      id: id ?? this.id,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'DiaData{ano: $ano, month: $month, dia: $dia, isToday: $isToday}';
   }
 }
 

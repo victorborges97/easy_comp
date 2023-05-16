@@ -35,3 +35,7 @@
 ## 0.0.9
 
 -   Voltando a versao de libs externas
+
+## 0.0.10
+
+-   Adicionando componentes basicos. input, button.

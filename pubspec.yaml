@@ -1,6 +1,6 @@
 name: easy_comp
 description: Componentes Feitos mais para uso pessoal.
-version: 0.0.9
+version: 0.0.10
 homepage: https://github.com/victorborges97/easy_comp
 
 # flutter pub publish --dry-run
@@ -23,6 +23,7 @@ dependencies:
     cloud_firestore: ^4.4.3
     intl: ^0.17.0
     fluttertoast: ^8.1.1
+    uuid: ^3.0.7
 
 dev_dependencies:
     flutter_test:
@@ -34,7 +35,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+#    uses-material-design: true
     # To add assets to your package, add an assets section, like this:
     # assets:
     #   - images/a_dot_burr.jpeg
