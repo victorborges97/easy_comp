@@ -19,6 +19,7 @@ export 'src/loader.dart';
 export 'src/messages.dart';
 //STYLES
 export 'src/styles/easy_comp_colors.dart';
+export 'src/styles/easy_comp_loading.dart';
 export 'src/styles/easy_comp_styles.dart';
 export 'src/styles/easy_comp_text.dart';
 export 'src/styles/easy_comp_theme.dart';

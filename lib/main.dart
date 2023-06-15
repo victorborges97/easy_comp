@@ -1,4 +1,5 @@
 import 'package:easy_comp/easy_comp.dart';
+import 'package:easy_comp/src/styles/easy_comp_loading.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,6 +25,36 @@ class EasyCompTeste extends BaseWidget {
       ),
       body: Column(
         children: [
+          EasyCompButton(
+            width: 50,
+            height: 35,
+            child: Icon(Icons.warning_amber_outlined),
+            onPressed: () async {
+              final cl = EasyCompLoading(context: context);
+              try {
+                cl.show(
+                  max: 50,
+                  msg: "Enviando",
+                  typeTheme: EasyCompLoadingTypeTheme.two,
+                );
+                for (var i = 0; i < 50; i++) {
+                  await Utils.delay2(milliseconds: 200);
+                  cl.update(value: i + 1, msg: "Enviando ${i + 1}");
+                  if (i == 26) {
+                    throw Exception("Error");
+                  }
+                }
+                cl.updateAndClose(
+                  msg: "Sucesso",
+                  timeOut: 400,
+                );
+              } catch (e) {
+                Utils.toast(message: "Error", context: context, isError: true);
+              } finally {
+                cl.close();
+              }
+            },
+          ),
           Text(
             "Estilizando de acordo com o thema",
             style: context.textApp.textBold.copyWith(

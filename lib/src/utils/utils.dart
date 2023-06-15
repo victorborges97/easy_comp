@@ -321,5 +321,18 @@ class Utils {
     );
   }
 
-  static delay(int i) => Future.delayed(Duration(seconds: i));
+  static delay(int i, {int? milliseconds}) => Future.delayed(milliseconds != null ? Duration(milliseconds: milliseconds) : Duration(seconds: i));
+
+  /// Componente de delay em milliseconds.
+  ///
+  /// 1000 = 1 segundo e assim por diante.
+  static delay2({int milliseconds = 1000}) => Future.delayed(Duration(milliseconds: milliseconds));
+
+  static valorPorcentagem({required dynamic total, required dynamic totalItem}) {
+    return (totalItem * 100 / total).toStringAsFixed(2);
+  }
+
+  static double valorPorcentagem0a1({required dynamic total, required dynamic totalItem}) {
+    return double.parse(((totalItem * 100 / total) / 100).toStringAsFixed(2));
+  }
 }

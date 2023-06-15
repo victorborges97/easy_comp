@@ -2,14 +2,16 @@ import 'package:easy_comp/easy_comp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-enum ValuePosition { center, right }
+enum EasyCompLoadingPosition { center, right }
 
-class CustomLoading {
+enum EasyCompLoadingTypeTheme { one, two }
+
+class EasyCompLoading {
   late BuildContext _context;
 
-  static IDialog? _current;
+  static IEasyCompLoading? _current;
 
-  CustomLoading({required context}) {
+  EasyCompLoading({required context}) {
     _context = context;
   }
 
@@ -22,14 +24,14 @@ class CustomLoading {
     }
   }
 
-  void updateAndClose({int? value, String? msg}) async {
+  void updateAndClose({int? value, String? msg, int timeOut = 200}) async {
     if (_current != null) {
       _current?.update(
         value: value,
         msg: msg,
       );
     }
-    await Utils.delay2(milliseconds: 200);
+    await Utils.delay2(milliseconds: timeOut);
     close();
   }
 
@@ -47,13 +49,14 @@ class CustomLoading {
   show({
     int? max,
     String? msg,
-    ValuePosition valuePosition = ValuePosition.right,
-    Color backgroundColor = Colors.black45,
+    EasyCompLoadingTypeTheme typeTheme = EasyCompLoadingTypeTheme.one,
+    EasyCompLoadingPosition valuePosition = EasyCompLoadingPosition.right,
+    Color? backgroundColor,
+    Color? msgColor,
     Color barrierColor = Colors.black26,
     Color progressValueColor = Colors.white,
     Color progressBgColor = Colors.blueGrey,
     Color valueColor = Colors.white,
-    Color msgColor = Colors.white,
     FontWeight msqFontWeight = FontWeight.bold,
     FontWeight valueFontWeight = FontWeight.normal,
     double valueFontSize = 15.0,
@@ -65,7 +68,15 @@ class CustomLoading {
     Color? bgColorLinear,
     Color? colorLinear,
   }) {
-    _current ??= LoadDialog(
+    if (typeTheme == EasyCompLoadingTypeTheme.one && backgroundColor == null) {
+      backgroundColor = Colors.black45;
+      msgColor = Colors.white;
+    } else if (typeTheme == EasyCompLoadingTypeTheme.two) {
+      backgroundColor = Colors.white;
+      msgColor = Colors.grey.shade900;
+    }
+
+    _current ??= LoadEasyCompLoading(
       context: _context,
       msg: msg,
       max: max,
@@ -74,12 +85,12 @@ class CustomLoading {
       msgFontSize: msgFontSize,
       valueFontSize: valueFontSize,
       valuePosition: valuePosition,
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor!,
       barrierColor: barrierColor,
       progressValueColor: progressValueColor,
       progressBgColor: progressBgColor,
       valueColor: valueColor,
-      msgColor: msgColor,
+      msgColor: msgColor!,
       msqFontWeight: msqFontWeight,
       valueFontWeight: valueFontWeight,
       bgColorLinear: bgColorLinear,
@@ -100,20 +111,20 @@ class CustomLoading {
   }
 }
 
-mixin IDialogService {
+mixin IEasyCompLoadingService {
   void dismiss();
 
   void update({int? value, String? msg});
 }
 
-abstract class IDialog extends StatelessWidget with IDialogService {
-  const IDialog({Key? key}) : super(key: key);
+abstract class IEasyCompLoading extends StatelessWidget with IEasyCompLoadingService {
+  const IEasyCompLoading({Key? key}) : super(key: key);
 }
 
 // ignore: must_be_immutable
-class LoadDialog extends IDialog {
+class LoadEasyCompLoading extends IEasyCompLoading {
   final String? msg;
-  final ValuePosition valuePosition;
+  final EasyCompLoadingPosition valuePosition;
   final Color backgroundColor;
   final Color barrierColor;
   final Color progressValueColor;
@@ -131,12 +142,12 @@ class LoadDialog extends IDialog {
   final Color? bgColorLinear;
   final Color? colorLinear;
 
-  LoadDialog({
+  LoadEasyCompLoading({
     super.key,
     required BuildContext context,
     this.msg,
     this.max,
-    this.valuePosition = ValuePosition.right,
+    this.valuePosition = EasyCompLoadingPosition.right,
     this.backgroundColor = Colors.black45,
     this.barrierColor = Colors.black26,
     this.progressValueColor = Colors.white,

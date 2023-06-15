@@ -39,3 +39,7 @@
 ## 0.0.10
 
 -   Adicionando componentes basicos. input, button.
+
+## 0.0.11
+
+-   Atualizando componentes, CustomLoading, Utils e adicionando EasyCompLoading.

@@ -1,40 +1,146 @@
 import 'package:easy_comp/easy_comp.dart';
 import 'package:flutter/material.dart';
 
-void main() {}
+void main() {
+  configStyles(
+    primaryColor: Colors.redAccent,
+  );
 
-class EasyCompTeste extends BaseWidget {
-  EasyCompTeste({super.key});
+  runApp(
+    MaterialApp(
+      theme: EasyCompTheme.i.themeData,
+      home: const EasyCompTeste(),
+    ),
+  );
+}
 
-  Future<List<String>> getValues() async {
-    await Future.delayed(const Duration(seconds: 2));
-    return ["1", "2", "3"];
-  }
-
+class EasyCompTeste extends StatelessWidget {
+  const EasyCompTeste({super.key});
   @override
-  Widget builder(BuildContext context, BoxConstraints constrains) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Teste"),
       ),
-      body: CustomFuture<List<String>>(
-        future: getValues(),
-        emptyWidget: const Text("Empty"),
-        withLoading: true,
-        withError: true,
-        erroBuilder: (error) {
-          return Text(error.toString());
-        },
-        builder: (values) {
-          return ListView.builder(
-            itemCount: values.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(values[index]),
-              );
+      body: Column(
+        children: [
+          EasyCompButton(
+            width: 50,
+            height: 35,
+            child: Icon(Icons.warning_amber_outlined),
+            onPressed: () async {
+              // EasyCompDialog.i.show(
+              //   context,
+              //   title: "Teste",
+              //   msg: "Teste",
+              //   type: EasyCompDialogType.warning,
+              // );
+
+              final cl = CustomLoading(context: context);
+              cl.show(max: 100);
+              for (var i = 0; i < 100; i++) {
+                await Utils.delay(1);
+                cl.update(value: i + 1);
+              }
+              cl.close();
             },
-          );
-        },
+          ),
+          Text(
+            "Estilizando de acordo com o thema",
+            style: context.textApp.textBold.copyWith(
+              fontSize: 25,
+              color: context.colors.primary,
+            ),
+          ),
+          EasyCompInputCalendar(
+            onChange: (data) {
+              print(data);
+            },
+          ),
+          const SizedBox(height: 30),
+          EasyCompInputCalendar.multiplos(
+            labelText: "Date Range",
+            onChange: (data1, data2) {
+              print(data1);
+              print(data2);
+            },
+          ),
+          const SizedBox(height: 30),
+          EasyCompInput(
+            labelText: "Input text",
+            onChange: (data1) {
+              print(data1);
+            },
+            icon: Icon(Icons.search),
+          ),
+          const SizedBox(height: 10),
+          EasyCompInput(
+            labelText: "Input password",
+            isPassword: true,
+            onChange: (data1) {
+              print(data1);
+            },
+            validator: (v) {},
+          ),
+          const SizedBox(height: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: EasyCompInput(
+                  labelText: "Input cpfOrCnpj",
+                  typeInput: EasyCompInputType.cpfOrCnpj,
+                  onChange: (data1) {
+                    print(data1);
+                  },
+                  validator: (v) {},
+                  withValidation: true,
+                  icon: Icon(Icons.search),
+                ),
+              ),
+              Expanded(
+                child: EasyCompInput(
+                  labelText: "Input cpfOrCnpj",
+                  typeInput: EasyCompInputType.cpfOrCnpj,
+                  onChange: (data1) {
+                    print(data1);
+                  },
+                  validator: (v) {},
+                  withValidation: true,
+                ),
+              ),
+              EasyCompButton(
+                width: 50,
+                height: 35,
+                child: Icon(Icons.search),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          EasyCompInput.future(
+            labelText: "Input cep",
+            typeInput: EasyCompInputType.cep,
+            onChange: (data1) {
+              print(data1);
+            },
+            validator: ValidatorUtil(isFuture: true).required().custom(
+              future: (value) async {
+                Utils.delay(3);
+                return true;
+              },
+            ).buildFuture(),
+            withValidation: true,
+          ),
+          const SizedBox(height: 10),
+          EasyCompInput.future(
+            labelText: "Input cpf",
+            typeInput: EasyCompInputType.cpf,
+            onChange: (data1) {
+              print(data1);
+            },
+          )
+        ],
       ),
     );
   }
