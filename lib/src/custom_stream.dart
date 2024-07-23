@@ -37,11 +37,11 @@ class CustomStreamBuilder<T> extends StatelessWidget {
           return loadingBuilder != null
               ? loadingBuilder!()
               : loadingWidget ??
-                  Center(
+                  const Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         CircularProgressIndicator(),
                       ],
                     ),

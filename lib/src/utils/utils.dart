@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-Future<QuerySnapshot<T>> getTimeout<T>(Query<T> query, {int seconds = 10}) =>
-    query.get().timeout(Duration(seconds: seconds));
+Future<QuerySnapshot<T>> getTimeout<T>(Query<T> query, {int seconds = 10}) => query.get().timeout(Duration(seconds: seconds));
 
 T getMap<T>({
   required String key,
@@ -16,19 +15,13 @@ T getMap<T>({
   T Function(dynamic)? parseFromJson,
 }) {
   if (parseFromJson != null) {
-    return map.containsKey(key) && map[key] != null
-        ? parseFromJson(map[key])
-        : retur;
+    return map.containsKey(key) && map[key] != null ? parseFromJson(map[key]) : retur;
   }
   if (parseInt) {
-    return (map.containsKey(key) && map[key] != null
-        ? int.parse(map[key].toString())
-        : retur) as T;
+    return (map.containsKey(key) && map[key] != null ? int.parse(map[key].toString()) : retur) as T;
   }
   if (parseDouble) {
-    return (map.containsKey(key) && map[key] != null
-        ? double.parse(map[key].toString())
-        : retur) as T;
+    return (map.containsKey(key) && map[key] != null ? double.parse(map[key].toString()) : retur) as T;
   }
   return map.containsKey(key) && map[key] != null ? map[key] : retur;
 }
@@ -51,13 +44,11 @@ class Utils {
   }) {
     return condicao
         ? Row(
-            mainAxisAlignment:
-                center ? MainAxisAlignment.center : rowMainAxisAligment,
+            mainAxisAlignment: center ? MainAxisAlignment.center : rowMainAxisAligment,
             children: children,
           )
         : Column(
-            crossAxisAlignment:
-                center ? CrossAxisAlignment.center : colCrossAxisAligment,
+            crossAxisAlignment: center ? CrossAxisAlignment.center : colCrossAxisAligment,
             children: children,
           );
   }
@@ -186,18 +177,13 @@ class Utils {
       builder: (BuildContext context) {
         return AlertDialog(
           scrollable: scrollable,
-          contentPadding: contentPadding ??
-              const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+          contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
           title: title,
           titlePadding: titlePadding,
           titleTextStyle: titleTextStyle,
           backgroundColor: backgroundColor,
-          shape: radius != null
-              ? RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(radius))
-              : shape,
-          content:
-              message ?? const Text("Você deseja realmente excluir esse item?"),
+          shape: radius != null ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)) : shape,
+          content: message ?? const Text("Você deseja realmente excluir esse item?"),
           actions: <Widget>[
             if (onNao != null)
               MaterialButton(
@@ -271,24 +257,18 @@ class Utils {
     );
   }
 
-  static delay(int i, {int? milliseconds}) =>
-      Future.delayed(milliseconds != null
-          ? Duration(milliseconds: milliseconds)
-          : Duration(seconds: i));
+  static delay(int i, {int? milliseconds}) => Future.delayed(milliseconds != null ? Duration(milliseconds: milliseconds) : Duration(seconds: i));
 
   /// Componente de delay em milliseconds.
   ///
   /// 1000 = 1 segundo e assim por diante.
-  static delay2({int milliseconds = 1000}) =>
-      Future.delayed(Duration(milliseconds: milliseconds));
+  static delay2({int milliseconds = 1000}) => Future.delayed(Duration(milliseconds: milliseconds));
 
-  static valorPorcentagem(
-      {required dynamic total, required dynamic totalItem}) {
+  static valorPorcentagem({required dynamic total, required dynamic totalItem}) {
     return (totalItem * 100 / total).toStringAsFixed(2);
   }
 
-  static double valorPorcentagem0a1(
-      {required dynamic total, required dynamic totalItem}) {
+  static double valorPorcentagem0a1({required dynamic total, required dynamic totalItem}) {
     return double.parse(((totalItem * 100 / total) / 100).toStringAsFixed(2));
   }
 }

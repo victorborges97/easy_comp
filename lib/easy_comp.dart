@@ -2,7 +2,6 @@ library easy_comp;
 
 /// BASE WIDGETS
 export 'src/base_state.dart';
-export "src/base_widget.dart";
 
 ///CUSTONS
 export "src/custom_future.dart";

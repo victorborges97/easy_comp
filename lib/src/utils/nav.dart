@@ -5,29 +5,57 @@ class Nav {
     return NavState(context);
   }
 
-  static Future<T?> goNamed<T extends Object?>(BuildContext context, String name) {
+  /// author: João Victor
+  ///
+  /// goNamed => pushNamed
+  static Future<T?> goNamed<T extends Object?>(BuildContext context, String name, {Object? arguments}) {
     final navigator = Nav.of(context);
-    return navigator.goNamed<T>(name);
+    return navigator.goNamed<T>(name, arguments: arguments);
   }
 
+  /// author: João Victor
+  ///
+  /// go => push
   static Future<T?> go<T extends Object?>(BuildContext context, Widget page) {
     final navigator = Nav.of(context);
     return navigator.go<T>(page);
   }
 
-  static Future<dynamic> toNamed(BuildContext context, String name) {
+  /// author: João Victor
+  ///
+  /// toNamed => pushNamedAndRemoveUntil
+  static Future<dynamic> toNamed(
+    BuildContext context,
+    String name, {
+    bool Function(Route<dynamic>)? predicate,
+    Object? arguments,
+  }) {
     final navigator = Nav.of(context);
-    return navigator.toNamed(name);
+    return navigator.toNamed(name, predicate: predicate, arguments: arguments);
   }
 
-  static Future<dynamic> to(BuildContext context, Widget page) {
+  /// author: João Victor
+  ///
+  /// to => pushAndRemoveUntil
+  static Future<dynamic> to(BuildContext context, Widget page, {bool Function(Route<dynamic>)? predicate}) {
     final navigator = Nav.of(context);
-    return navigator.to(page);
+    return navigator.to(page, predicate: predicate);
   }
 
+  /// author: João Victor
+  ///
+  /// back => pop
   static void back<T extends Object?>(BuildContext context, [T? result]) {
     final navigator = Nav.of(context);
     return navigator.back<T>(result);
+  }
+
+  /// author: João Victor
+  ///
+  /// canBack => canPop
+  static bool canBack(BuildContext context) {
+    final navigator = Nav.of(context);
+    return navigator.canBack();
   }
 }
 
@@ -48,18 +76,18 @@ class NavState {
     );
   }
 
-  Future<dynamic> toNamed(String name, {Object? arguments}) {
+  Future<dynamic> toNamed(String name, {bool Function(Route<dynamic>)? predicate, Object? arguments}) {
     return _navigatorState.pushNamedAndRemoveUntil(
       name,
-      (v) => false,
+      predicate ?? (v) => false,
       arguments: arguments,
     );
   }
 
-  Future<dynamic> to(Widget page) {
+  Future<dynamic> to(Widget page, {bool Function(Route<dynamic>)? predicate}) {
     return _navigatorState.pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => page),
-      (v) => false,
+      predicate ?? (v) => false,
     );
   }
 

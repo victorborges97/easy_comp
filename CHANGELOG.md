@@ -51,3 +51,7 @@
 ## 0.0.13
 
 -   Retirando dependencia de toast.
+
+## 1.0.0
+
+-   Atualizando o flutter e intl
