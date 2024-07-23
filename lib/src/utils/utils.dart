@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-Future<QuerySnapshot<T>> getTimeout<T>(Query<T> query, {int seconds = 10}) => query.get().timeout(Duration(seconds: seconds));
+Future<QuerySnapshot<T>> getTimeout<T>(Query<T> query, {int seconds = 10}) =>
+    query.get().timeout(Duration(seconds: seconds));
 
 T getMap<T>({
   required String key,
@@ -17,13 +16,19 @@ T getMap<T>({
   T Function(dynamic)? parseFromJson,
 }) {
   if (parseFromJson != null) {
-    return map.containsKey(key) && map[key] != null ? parseFromJson(map[key]) : retur;
+    return map.containsKey(key) && map[key] != null
+        ? parseFromJson(map[key])
+        : retur;
   }
   if (parseInt) {
-    return (map.containsKey(key) && map[key] != null ? int.parse(map[key].toString()) : retur) as T;
+    return (map.containsKey(key) && map[key] != null
+        ? int.parse(map[key].toString())
+        : retur) as T;
   }
   if (parseDouble) {
-    return (map.containsKey(key) && map[key] != null ? double.parse(map[key].toString()) : retur) as T;
+    return (map.containsKey(key) && map[key] != null
+        ? double.parse(map[key].toString())
+        : retur) as T;
   }
   return map.containsKey(key) && map[key] != null ? map[key] : retur;
 }
@@ -46,11 +51,13 @@ class Utils {
   }) {
     return condicao
         ? Row(
-            mainAxisAlignment: center ? MainAxisAlignment.center : rowMainAxisAligment,
+            mainAxisAlignment:
+                center ? MainAxisAlignment.center : rowMainAxisAligment,
             children: children,
           )
         : Column(
-            crossAxisAlignment: center ? CrossAxisAlignment.center : colCrossAxisAligment,
+            crossAxisAlignment:
+                center ? CrossAxisAlignment.center : colCrossAxisAligment,
             children: children,
           );
   }
@@ -111,7 +118,7 @@ class Utils {
 
   static void mostrarMsgTop(BuildContext context, String value, bool erro) {
     showTopSnackBar(
-      Overlay.of(context)!,
+      Overlay.of(context),
       CustomSnackBar.info(
         backgroundColor: erro ? Colors.red : Colors.green,
         message: value,
@@ -147,68 +154,6 @@ class Utils {
     return condicao ? sim : nao;
   }
 
-  static void toast({
-    required String message,
-    required BuildContext context,
-    IconData? icon,
-    bool isError = false,
-    bool isAlert = false,
-    int seconds = 2,
-  }) {
-    final fToast = FToast();
-    fToast.removeQueuedCustomToasts();
-
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: isError
-            ? const Color(0xffF14E3C)
-            : isAlert
-                ? const Color(0xff84919E)
-                : const Color(0xff24af42),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null)
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 20,
-            ),
-          const SizedBox(
-            width: 12.0,
-          ),
-          Text(
-            message,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            maxLines: 2,
-          ),
-        ],
-      ),
-    );
-
-    fToast.init(context);
-    fToast.showToast(
-        child: toast,
-        gravity: kIsWeb ? ToastGravity.TOP_RIGHT : ToastGravity.TOP,
-        toastDuration: Duration(seconds: seconds),
-        positionedToastBuilder: (context, child) {
-          if (kIsWeb) {
-            return Positioned(
-              top: 16.0,
-              right: 16.0,
-              child: child,
-            );
-          } else {
-            return child;
-          }
-        });
-  }
-
   static void hideKeyboard(BuildContext context) {
     double key = WidgetsBinding.instance.window.viewInsets.bottom;
     if (key > 0.0) {
@@ -241,13 +186,18 @@ class Utils {
       builder: (BuildContext context) {
         return AlertDialog(
           scrollable: scrollable,
-          contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+          contentPadding: contentPadding ??
+              const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
           title: title,
           titlePadding: titlePadding,
           titleTextStyle: titleTextStyle,
           backgroundColor: backgroundColor,
-          shape: radius != null ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)) : shape,
-          content: message ?? const Text("Você deseja realmente excluir esse item?"),
+          shape: radius != null
+              ? RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(radius))
+              : shape,
+          content:
+              message ?? const Text("Você deseja realmente excluir esse item?"),
           actions: <Widget>[
             if (onNao != null)
               MaterialButton(
@@ -321,18 +271,24 @@ class Utils {
     );
   }
 
-  static delay(int i, {int? milliseconds}) => Future.delayed(milliseconds != null ? Duration(milliseconds: milliseconds) : Duration(seconds: i));
+  static delay(int i, {int? milliseconds}) =>
+      Future.delayed(milliseconds != null
+          ? Duration(milliseconds: milliseconds)
+          : Duration(seconds: i));
 
   /// Componente de delay em milliseconds.
   ///
   /// 1000 = 1 segundo e assim por diante.
-  static delay2({int milliseconds = 1000}) => Future.delayed(Duration(milliseconds: milliseconds));
+  static delay2({int milliseconds = 1000}) =>
+      Future.delayed(Duration(milliseconds: milliseconds));
 
-  static valorPorcentagem({required dynamic total, required dynamic totalItem}) {
+  static valorPorcentagem(
+      {required dynamic total, required dynamic totalItem}) {
     return (totalItem * 100 / total).toStringAsFixed(2);
   }
 
-  static double valorPorcentagem0a1({required dynamic total, required dynamic totalItem}) {
+  static double valorPorcentagem0a1(
+      {required dynamic total, required dynamic totalItem}) {
     return double.parse(((totalItem * 100 / total) / 100).toStringAsFixed(2));
   }
 }

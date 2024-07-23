@@ -8,6 +8,52 @@ bool emailValid(String email) {
   return regex.hasMatch(email);
 }
 
+class EasyCompValid {
+  static StringValidationCallback cpf([String? message = "CPF inválido"]) => ValidatorUtil().cpf(message).build();
+  static StringValidationCallback cnpj([String? message = "CNPJ inválido"]) => ValidatorUtil().cnpj(message).build();
+  static StringValidationCallback cpfOuCnpj([String? message = "Documento inválido"]) => ValidatorUtil().cpfOuCnpj(message).build();
+  static StringValidationCallback email([String? message = "E-mail inválido"]) => ValidatorUtil().email(message).build();
+  static StringValidationCallback required([String? message = "Campo requerido"]) => ValidatorUtil().required(message).build();
+  static StringValidationCallback minLength(int minLength, [String? message = "Tamanho inválido"]) => ValidatorUtil().minLength(minLength, message).build();
+  static StringValidationCallback maxLength(int maxLength, [String? message = "Tamanho inválido"]) => ValidatorUtil().maxLength(maxLength, message).build();
+  static StringValidationCallback compareController(TextEditingController to, TextEditingController compareTo, [String? message = "Campo divergente"]) => ValidatorUtil()
+      .compareController(
+        to,
+        compareTo,
+        message,
+      )
+      .build();
+  static StringValidationCallback compareString(String to, String compareTo, [String? message = "Campo divergente"]) => ValidatorUtil()
+      .compareString(
+        to,
+        compareTo,
+        message,
+      )
+      .build();
+  static StringValidationCallback custom({
+    bool Function(String?)? valide,
+    String? message = "Inválido",
+  }) =>
+      ValidatorUtil()
+          .custom(
+            valide: valide,
+            message: message,
+          )
+          .build();
+
+  static StringValidationCallback multiples(List<StringValidationCallback> validations) {
+    return (v) {
+      for (var validate in validations) {
+        final result = validate(v);
+        if (result != null) {
+          return result;
+        }
+      }
+      return null;
+    };
+  }
+}
+
 class ValidatorUtil {
   ValidatorUtil({
     this.optional = false,

@@ -1,5 +1,4 @@
 import 'package:easy_comp/easy_comp.dart';
-import 'package:easy_comp/src/styles/easy_comp_loading.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +15,7 @@ void main() {
 }
 
 class EasyCompTeste extends BaseWidget {
-  EasyCompTeste({Key? key});
+  EasyCompTeste({super.key});
   @override
   Widget builder(BuildContext context, BoxConstraints constrains) {
     return Scaffold(
@@ -28,7 +27,7 @@ class EasyCompTeste extends BaseWidget {
           EasyCompButton(
             width: 50,
             height: 35,
-            child: Icon(Icons.warning_amber_outlined),
+            child: const Icon(Icons.warning_amber_outlined),
             onPressed: () async {
               final cl = EasyCompLoading(context: context);
               try {
@@ -49,7 +48,6 @@ class EasyCompTeste extends BaseWidget {
                   timeOut: 400,
                 );
               } catch (e) {
-                Utils.toast(message: "Error", context: context, isError: true);
               } finally {
                 cl.close();
               }
@@ -81,7 +79,7 @@ class EasyCompTeste extends BaseWidget {
             onChange: (data1) {
               print(data1);
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           ),
           const SizedBox(height: 10),
           EasyCompInput(
@@ -105,7 +103,7 @@ class EasyCompTeste extends BaseWidget {
                   },
                   validator: (v) {},
                   withValidation: true,
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                 ),
               ),
               Expanded(
@@ -122,7 +120,7 @@ class EasyCompTeste extends BaseWidget {
               EasyCompButton(
                 width: 50,
                 height: 35,
-                child: Icon(Icons.search),
+                child: const Icon(Icons.search),
                 onPressed: () {},
               ),
             ],

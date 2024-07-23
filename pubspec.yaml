@@ -1,6 +1,6 @@
 name: easy_comp
 description: Componentes Feitos mais para uso pessoal.
-version: 0.0.11
+version: 0.0.13
 homepage: https://github.com/victorborges97/easy_comp
 
 # flutter pub publish --dry-run
@@ -22,7 +22,6 @@ dependencies:
     update: ^0.3.1
     cloud_firestore: ^4.4.3
     intl: ^0.17.0
-    fluttertoast: ^8.1.1
     uuid: ^3.0.7
 
 dev_dependencies:

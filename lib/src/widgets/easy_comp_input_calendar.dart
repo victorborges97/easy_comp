@@ -132,7 +132,7 @@ class _EasyCompInputCalendarState extends State<EasyCompInputCalendar> {
                                     (e) => Center(
                                       child: Text(
                                         "$e ${ano}",
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 16,
                                         ),
                                       ),
@@ -169,7 +169,7 @@ class _EasyCompInputCalendarState extends State<EasyCompInputCalendar> {
                     ),
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      ...CalendarGen.semana_names.map((e) => Center(child: Text(e))).toList(),
+                      ...CalendarGen.semanaNames.map((e) => Center(child: Text(e))).toList(),
                       ...CalendarGen.tratarDiasEmpty(
                         CalendarGen.getDaysOfMonthByYear(CalendarGen.month_data[mes], ano),
                         CalendarGen.month_data[mes],
@@ -312,7 +312,7 @@ class _EasyCompInputCalendarState extends State<EasyCompInputCalendar> {
 
                         hideOverlay();
                       },
-                      child: Text("Confirmar"),
+                      child: const Text("Confirmar"),
                     ),
                   ],
                 )
@@ -345,7 +345,7 @@ class _EasyCompInputCalendarState extends State<EasyCompInputCalendar> {
     });
 
     // Adiciona o OverlayEntry ao Overlay do contexto
-    Overlay.of(context)!.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
   }
 
   void hideOverlay() {
@@ -357,7 +357,6 @@ class _EasyCompInputCalendarState extends State<EasyCompInputCalendar> {
   }
 
   BoxDecoration dbox(String diaSelecionado1, String diaSelecionado2, DiaData e, int anoSelecionado, int mes) {
-    print("mes: $mes - ano: $anoSelecionado");
     if (e.dia.trim().isEmpty) {
       return BoxDecoration(
         borderRadius: BorderRadius.circular(5),
@@ -391,7 +390,7 @@ class _EasyCompInputCalendarState extends State<EasyCompInputCalendar> {
 
   TextStyle stext(String diaSelecionado1, String diaSelecionado2, DiaData e, int anoSelecionado, int mes) {
     if (e.dia.trim().isEmpty) {
-      return TextStyle();
+      return const TextStyle();
     }
 
     if (widget.multiplos) {
@@ -478,27 +477,27 @@ class CalendarGen {
     'Novembro': 11,
     'Dezembro': 12,
   };
-  static List<dynamic> semana_names = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
+  static List<dynamic> semanaNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
 
   static List<DiaData> getDaysOfMonthByYear(month, year) {
     var monthIndex = month - 1;
-    var days_of_month = [31, getFebDays(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var daysOfMonth = [31, getFebDays(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     var currentDate = DateTime.now();
-    var first_day = DateTime(year, month);
+    var firstDay = DateTime(year, month);
     List<DiaData> mesDays = [];
 
-    for (var i = 0; i <= (days_of_month[monthIndex] + (first_day.weekday - 1)); i++) {
+    for (var i = 0; i <= (daysOfMonth[monthIndex] + (firstDay.weekday - 1)); i++) {
       var day = "  ";
 
-      if (i >= first_day.weekday) {
-        var dia = i - first_day.weekday + 1;
+      if (i >= firstDay.weekday) {
+        var dia = i - firstDay.weekday + 1;
         day = dia.toString().padLeft(2, "0");
         if (dia == currentDate.day && year == currentDate.year && month == currentDate.month) {
           day = "${day.padLeft(2, "0")}+";
         }
       }
 
-      if (first_day.weekday == 7 && day == "  ") {
+      if (firstDay.weekday == 7 && day == "  ") {
         print("first_day.weekday == 7 && day == " "");
       } else {
         mesDays.add(
@@ -539,8 +538,6 @@ class CalendarGen {
         }
       }
     }
-
-    print(mesDays);
     return mesDays;
   }
 
@@ -556,10 +553,6 @@ class CalendarGen {
       mes.add(subLista);
       i += 7;
     }
-
-    mes.forEach((semana) {
-      print(semana);
-    });
   }
 }
 

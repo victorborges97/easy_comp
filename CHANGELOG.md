@@ -43,3 +43,11 @@
 ## 0.0.11
 
 -   Atualizando componentes, CustomLoading, Utils e adicionando EasyCompLoading.
+
+## 0.0.12
+
+-   Atualizando componente de navegaçao, adicionando EasyCompValid.
+
+## 0.0.13
+
+-   Retirando dependencia de toast.

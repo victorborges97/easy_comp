@@ -38,8 +38,8 @@ class NavState {
     _navigatorState = Navigator.of(context);
   }
 
-  Future<T?> goNamed<T extends Object?>(String name) {
-    return _navigatorState.pushNamed<T>(name);
+  Future<T?> goNamed<T extends Object?>(String name, {Object? arguments}) {
+    return _navigatorState.pushNamed<T>(name, arguments: arguments);
   }
 
   Future<T?> go<T extends Object?>(Widget page) {
@@ -48,10 +48,11 @@ class NavState {
     );
   }
 
-  Future<dynamic> toNamed(String name) {
+  Future<dynamic> toNamed(String name, {Object? arguments}) {
     return _navigatorState.pushNamedAndRemoveUntil(
       name,
       (v) => false,
+      arguments: arguments,
     );
   }
 
